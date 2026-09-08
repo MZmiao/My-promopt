@@ -11,7 +11,7 @@
 
   一般来说，Agent 会把一系列工具调用组合成一个请求，从而减少轮次，但因为 Pi 内置的 prompt，在 Pi 里面不会这样操作，因此需要：
 
-  ```json
+  ```go
 <directive name="batch_tool_calls">
     <trigger>Whenever you issue a tool call and further calls are foreseeable</trigger>
     <action>
