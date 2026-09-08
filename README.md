@@ -2,16 +2,18 @@
 
 - 适用范围
 
-  本规则为 个人全局强制规则，对所有 Pi 会话永久生效，优先级低于项目 AGENTS.md、高于模型默认 Prompt。核心目标：减少轮次、减少 Token、杜绝无效重复调用、提升执行速度。
+本规则为 个人全局强制规则，对所有 Pi 会话永久生效，优先级低于项目 AGENTS.md、高于模型默认 Prompt。核心目标：减少轮次、减少 Token、杜绝无效重复调用、提升执行速度。
 
 
-  - ## PI Agent 调用工具，消耗Token过多：多任务并行
+ - ## PI Agent 调用工具，消耗Token过多：多任务并行
 
-  一个很重要的因素是 Pi 内置的 prompt 倾向每个工具都要伴随着解释，因此导致每次都会「[思考] → [解释] → [工具] → [思考] → [解释] → [工具] → …」，而不会同时调用多个工具。
+一个很重要的因素是 Pi 内置的 prompt 倾向每个工具都要伴随着解释，因此导致每次都会「[思考] → [解释] → [工具] → [思考] → [解释] → [工具] → …」，而不会同时调用多个工具。
 
-  一般来说，Agent 会把一系列工具调用组合成一个请求，从而减少轮次，但因为 Pi 内置的 prompt，在 Pi 里面不会这样操作，因此需要：
+一般来说，Agent 会把一系列工具调用组合成一个请求，从而减少轮次，但因为 Pi 内置的 prompt，在 Pi 里面不会这样操作，因此需要：
 
-  ```go
+
+
+```
 <directive name="batch_tool_calls">
     <trigger>Whenever you issue a tool call and further calls are foreseeable</trigger>
     <action>
@@ -26,15 +28,15 @@
       longer the session runs.
     </action>
   </directive>
-  ```
+```
 
-  - ## PI Agent 使用内置的工具而不是命令行
+- ## PI Agent 使用内置的工具而不是命令行
 
-  使用内置的工具而非命令行
+使用内置的工具而非命令行
 
-  很多时候模型在默认情况下会使用命令行执行 `grep`、`cat` 之类的指令，而非 `Read`、`Grep` 等工具。
+很多时候模型在默认情况下会使用命令行执行 `grep`、`cat` 之类的指令，而非 `Read`、`Grep` 等工具。
 
-  ```go
+```go
 <directive name="tool_selection">
   <trigger>Before any tool call that reads a file, searches text, or lists a directory</trigger>
   <action>
@@ -49,11 +51,11 @@
     into the conversation.
  </action>
 </directive>
-  ```
+```
 
-  ## 过程中需要输出每一步你都做了什么，不要偷懒
+## 过程中需要输出每一步你都做了什么，不要偷懒
 
-  所有任务执行过程，每一步动作必须显性输出日志，不允许跳过步骤、不允许静默调用工具、不允许省略中间分析。
+所有任务执行过程，每一步动作必须显性输出日志，不允许跳过步骤、不允许静默调用工具、不允许省略中间分析。
   执行标准：
 
   - 执行前：输出 执行方案 + 需要调用的工具列表 + 执行目的
@@ -66,8 +68,8 @@
 
   - 禁止：只调用工具不说话、只执行不总结、多步骤合并跳过说明、省略排查过程
 
-    <directive name="tool_selection">
-
+```GO
+<directive name="tool_selection">
     <trigger>Before any tool call that reads a file, searches text, or lists a directory</trigger>
     <action>
       Prefer the dedicated tool over `bash` whenever one fits: `read` for file
@@ -80,8 +82,8 @@
       will happily paste a minified bundle, a sourcemap line, or a JSONL record
       into the conversation.
     </action>
-    </directive>
-
+</directive>
+```
 
 
 任何时候，不要修改和本次需求不相关的代码，如果一定要修改，需要先说明，征得同意后再进行修改。最后要提醒用户review该部分代码，否则不能提交！！！
