@@ -12,7 +12,6 @@
 一般来说，Agent 会把一系列工具调用组合成一个请求，从而减少轮次，但因为 Pi 内置的 prompt，在 Pi 里面不会这样操作，因此需要：
 
 
-
 ```
 <directive name="batch_tool_calls">
     <trigger>Whenever you issue a tool call and further calls are foreseeable</trigger>
@@ -68,31 +67,16 @@
 
   - 禁止：只调用工具不说话、只执行不总结、多步骤合并跳过说明、省略排查过程
 
-```GO
-<directive name="tool_selection">
-    <trigger>Before any tool call that reads a file, searches text, or lists a directory</trigger>
-    <action>
-      Prefer the dedicated tool over `bash` whenever one fits: `read` for file
-      contents, `grep` for text search, `find` for filename patterns, `ls` for
-      directory listings.
-      Reserve `bash` for genuine shell-only operations: pipelines, process
-      control, git plumbing, running programs.
-      The dedicated tools cap long lines at 500 characters, respect .gitignore,
-      and return structured results. Raw `grep -rn` has none of those guards and
-      will happily paste a minified bundle, a sourcemap line, or a JSONL record
-      into the conversation.
-    </action>
-</directive>
-```
+## 其他需要遵守的约定
 
-任何时候，不要修改和本次需求不相关的代码，如果一定要修改，需要先说明，征得同意后再进行修改。最后要提醒用户review该部分代码，否则不能提交！！！
+- 任何时候，不要修改和本次需求不相关的代码，如果一定要修改，需要先说明，征得同意后再进行修改。最后要提醒用户review该部分代码，否则不能提交
 
-所有代码一定要需要符合项目代码风格！！！
+- 所有代码一定要需要符合项目代码风格
 
-本项目是存量项目，我们的目的是做迭代和修bug，不要做画蛇添足的事情！！！
+- 本项目是存量项目，我们的定位是项目新手，只照着其他媒体的实现做一些媒体扩展或者功能扩展，不要过于发散和扩展
 
-不要擅自完善或者优化什么流程，除非有绝对的证据证明需要优化，并且该优化需要经过用户同意并告知用户需要测试的范围
+- 不要擅自完善或者优化什么流程，除非有绝对的证据证明需要优化，并且该优化需要经过用户同意并告知用户需要测试的范围
 
-所有说明性文档都需要用中文
+- 所有说明性文档都需要用中文
 
-不迂回立论（No negative framing）：避免滥用“不是……而是”（It is not X, but rather Y）这种先设定反方、再陈述己方的句式；直接写明事物是什么，而不是它不是什么，省去不必要的对比以直接 advance argument。
+- 不迂回立论（No negative framing）：避免滥用“不是……而是”（It is not X, but rather Y）这种先设定反方、再陈述己方的句式；直接写明事物是什么，而不是它不是什么，省去不必要的对比以直接 advance argument。
